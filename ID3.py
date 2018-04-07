@@ -9,6 +9,9 @@ def ID3(examples, default):
   Any missing attributes are denoted with a value of "?"
   '''
 
+
+
+
 def prune(node, examples):
   '''
   Takes in a trained tree and a validation set of examples.  Prunes nodes in order
@@ -27,3 +30,6 @@ def evaluate(node, example):
   Takes in a tree and one example.  Returns the Class value that the tree
   assigns to the example.
   '''
+
+def CHOOSE_ATTRIBUTE(example):
+  
