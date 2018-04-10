@@ -1,4 +1,5 @@
 import ID3, parse, random
+from ID3 import shannon_value
 
 def mini_grader():
 
@@ -78,4 +79,16 @@ def mini_grader():
     print 'ID3 test 4 failed runtime error'
 
 if __name__ == "__main__":
-    mini_grader()
+#    mini_grader()
+  data = [dict(L= 's', F= 's',H='no' , Class='no'),
+          dict(L='s', F='l', H='yes', Class='yes'),
+          dict(L='l', F='m', H='yes', Class='yes'),
+          dict(L='m', F='m', H='yes', Class='yes'),
+          dict(L='l', F='m', H='yes', Class='yes'),
+          dict(L='m', F='l', H='no', Class='yes'),
+          dict(L='m', F='s', H='no', Class='no'),
+          dict(L='l', F='m', H='no', Class='yes'),
+          dict(L='m', F='s', H='no', Class='yes'),
+          dict(L='s', F='s', H='yes', Class='no')]
+  a = shannon_value(data)
+  print a

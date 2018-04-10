@@ -32,4 +32,56 @@ def evaluate(node, example):
   '''
 
 def CHOOSE_ATTRIBUTE(example):
-  
+  dict = {}
+  num = len(example)
+  for data in example:
+    if data['Class'] not in dict:
+      dict[data['Class']] = 1
+    else:
+      dict[data['Class']] += 1
+  Shannon = 0
+  for eachClass in dict:
+    P = dict[eachClass] / num
+    Shannon += - P * math.log(P,2)
+
+def shannon_value(example):
+  Best = 1
+  best_attr = None
+  for feature in example[0]:
+    if feature == 'Class':
+      continue
+    value = []
+    for data in example:
+      if data[feature] not in value:
+        value.append(data[feature])
+    info = 0
+    n = 0
+    for v in value:
+      print(feature+"="+ str(v)+":")
+      dict = {}
+      for data in example:
+        if data[feature] == v:
+          if data['Class'] not in dict:
+            dict[data['Class']] = 1
+          else:
+            dict[data['Class']] += 1
+      shannon, num = calculate(dict)
+      print(shannon)
+      info += shannon * num
+      n += num
+    info = info / n
+    print("When feature = "+ feature+" ,info = "+str(info))
+    if info < Best:
+      Best = info
+      best_attr = feature
+  return best_attr
+
+
+def calculate(dict):
+    value = dict.values()
+    num = sum(value)
+    S = 0
+    for eachClass in dict:
+      P = float( dict[eachClass]) / num
+      S += - P * math.log(P,2)
+    return S,num
