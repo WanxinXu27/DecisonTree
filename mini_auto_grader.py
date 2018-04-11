@@ -80,17 +80,17 @@ def mini_grader():
     print 'ID3 test 4 failed runtime error'
 
 if __name__ == "__main__":
-   mini_grader()
-#   data = [dict(L= 's', F= 's',H='no' , Class='no'),
-#           dict(L='s', F='l', H='yes', Class='yes'),
-#           dict(L='l', F='m', H='yes', Class='yes'),
-#           dict(L='m', F='m', H='yes', Class='yes'),
-#           dict(L='l', F='m', H='yes', Class='yes'),
-#           dict(L='m', F='l', H='no', Class='yes'),
-#           dict(L='m', F='s', H='no', Class='no'),
-#           dict(L='l', F='m', H='no', Class='yes'),
-#           dict(L='m', F='s', H='no', Class='yes'),
-#           dict(L='s', F='s', H='yes', Class='no')]
+  mini_grader()
+  data = [dict(L= 's', F= 's',H='no' , Class='no'),
+          dict(L='s', F='l', H='yes', Class='yes'),
+          dict(L='l', F='m', H='yes', Class='yes'),
+          dict(L='m', F='m', H='yes', Class='yes'),
+          dict(L='l', F='m', H='yes', Class='yes'),
+          dict(L='m', F='l', H='no', Class='yes'),
+          dict(L='m', F='s', H='no', Class='no'),
+          dict(L='l', F='m', H='no', Class='yes'),
+          dict(L='m', F='s', H='no', Class='yes'),
+          dict(L='s', F='s', H='yes', Class='no')]
 # #   data = [dict(a=1, b=0, Class=2), dict(a=1, b=1, Class=1),
 # #         dict(a=2, b=0, Class=2), dict(a=2, b=1, Class=3),
 # #         dict(a=3, b=0, Class=1), dict(a=3, b=1, Class=3)]
@@ -100,3 +100,9 @@ if __name__ == "__main__":
 #   print data
 #   data = [dict(Class = 2),dict(Class = 2),dict(Class = 2),dict(Class = 1),dict(Class = 3),dict(Class = 4),dict(Class = 0)]
 #   majority(data)
+  try:
+    tree = ID3.ID3(data, 0)
+    if tree != None:
+      ans = ID3.evaluate(tree, dict(L='s', F='s', H='no'))
+  except Exception:
+    print 'ID3 test 4 failed runtime error'
