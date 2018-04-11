@@ -8,6 +8,28 @@ def ID3(examples, default):
   and the target class variable is a special attribute with the name "Class".
   Any missing attributes are denoted with a value of "?"
   '''
+  if len(examples) == 0:
+    return None
+  AllClass = [element['Class'] for element in examples]
+  dict = {}
+  for i in AllClass:
+    if i not in dict:
+      dict[i] = 1
+    else:
+      dict[i] += 1
+  if len(dict) == 1:
+    [k] = dict.keys()
+    return k
+  if len(examples[0]) == 1:
+    return majority(examples)
+  best = CHOOSE_ATTRIBUTE(examples)
+  value = count([element[best] for element in examples])
+  root = Node()
+  root.label = best
+  for v in value:
+    examples_v = split(examples,best,v)
+    root.children[v] = ID3(examples_v,0)
+  return root
 
 
 
@@ -30,22 +52,21 @@ def evaluate(node, example):
   Takes in a tree and one example.  Returns the Class value that the tree
   assigns to the example.
   '''
+  if a not in Node()
+
+
+
+
 
 def CHOOSE_ATTRIBUTE(example):
-  dict = {}
-  num = len(example)
-  for data in example:
-    if data['Class'] not in dict:
-      dict[data['Class']] = 1
+  H_prior = {}
+  for element in example:
+    if element['Class'] not in H_prior:
+      H_prior[element['Class']] = 1
     else:
-      dict[data['Class']] += 1
-  Shannon = 0
-  for eachClass in dict:
-    P = dict[eachClass] / num
-    Shannon += - P * math.log(P,2)
-
-def shannon_value(example):
-  Best = 1
+      H_prior[element['Class']] += 1
+  Best,num_class = calculate(H_prior)
+  print("info of H_prior = " + str(Best))
   best_attr = None
   for feature in example[0]:
     if feature == 'Class':
@@ -85,3 +106,40 @@ def calculate(dict):
       P = float( dict[eachClass]) / num
       S += - P * math.log(P,2)
     return S,num
+
+def count(data):
+  dict = {}
+  for i in data:
+    if i not in dict:
+      dict[i] = 1
+    else:
+      dict[i] += 1
+  return dict.keys()
+
+def split(examples,attribute,value):
+  res = []
+  for element in examples:
+    if element[attribute] == value:
+      dict = {}
+      for keys in element:
+        if keys == attribute:
+          continue
+        dict[keys] = element[keys]
+      res.append(dict)
+  return res
+
+def majority(examples):
+  l = [element['Class'] for element in examples]
+  dict = {}
+  for i in l:
+    if i not in dict:
+      dict[i] = 1
+    else:
+      dict[i] += 1
+  count = 0
+  maj = None
+  for keys in dict:
+    if dict[keys] > count:
+      count = dict[keys]
+      maj = keys
+  return maj
