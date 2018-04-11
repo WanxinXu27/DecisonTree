@@ -19,9 +19,15 @@ def ID3(examples, default):
       dict[i] += 1
   if len(dict) == 1:
     [k] = dict.keys()
-    return k
+    root = Node()
+    root.label = None
+    root.children['Class'] = k
+    return root
   if len(examples[0]) == 1:
-    return majority(examples)
+    root = Node()
+    root.label = None
+    root.children['Class'] = majority(examples)
+    return root
   best = CHOOSE_ATTRIBUTE(examples)
   value = count([element[best] for element in examples])
   root = Node()
@@ -52,9 +58,10 @@ def evaluate(node, example):
   Takes in a tree and one example.  Returns the Class value that the tree
   assigns to the example.
   '''
-  if a not in Node()
-
-
+  if node.label == None:
+    return node.children['Class']
+  classification = evaluate(node.children[example[node.label]],example)
+  return classification
 
 
 
@@ -66,7 +73,7 @@ def CHOOSE_ATTRIBUTE(example):
     else:
       H_prior[element['Class']] += 1
   Best,num_class = calculate(H_prior)
-  print("info of H_prior = " + str(Best))
+ # print("info of H_prior = " + str(Best))
   best_attr = None
   for feature in example[0]:
     if feature == 'Class':
@@ -78,7 +85,7 @@ def CHOOSE_ATTRIBUTE(example):
     info = 0
     n = 0
     for v in value:
-      print(feature+"="+ str(v)+":")
+#      print(feature+"="+ str(v)+":")
       dict = {}
       for data in example:
         if data[feature] == v:
@@ -87,11 +94,11 @@ def CHOOSE_ATTRIBUTE(example):
           else:
             dict[data['Class']] += 1
       shannon, num = calculate(dict)
-      print(shannon)
+ #     print(shannon)
       info += shannon * num
       n += num
     info = info / n
-    print("When feature = "+ feature+" ,info = "+str(info))
+#    print("When feature = "+ feature+" ,info = "+str(info))
     if info < Best:
       Best = info
       best_attr = feature
