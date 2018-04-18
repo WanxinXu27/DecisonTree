@@ -2,6 +2,7 @@ import ID3, parse, random
 from ID3 import CHOOSE_ATTRIBUTE
 from ID3 import split
 from ID3 import majority
+from ID3 import accuracy_after_prune
 
 def mini_grader():
 
@@ -80,8 +81,27 @@ def mini_grader():
     print 'ID3 test 4 failed runtime error'
 
 if __name__ == "__main__":
-  mini_grader()
-  data = [dict(L= 's', F= 's',H='no' , Class='no'),
+  # mini_grader()
+  # data = [dict(L= 's', F= 's',H='no' , Class='no'),
+  #         dict(L='s', F='l', H='yes', Class='yes'),
+  #         dict(L='l', F='m', H='yes', Class='yes'),
+  #         dict(L='m', F='m', H='yes', Class='yes'),
+  #         dict(L='l', F='m', H='yes', Class='yes'),
+  #         dict(L='m', F='l', H='no', Class='yes'),
+  #         dict(L='m', F='s', H='no', Class='no'),
+  #         dict(L='l', F='m', H='no', Class='yes'),
+  #         dict(L='m', F='s', H='no', Class='yes'),
+  #         dict(L='s', F='s', H='yes', Class='no')]
+  # try:
+  #   tree = ID3.ID3(data, 0)
+  #   if tree != None:
+  #     ans = ID3.evaluate(tree, dict(L='m', F='l', H='no'))
+  #   if ans == 'yes':
+  #     print ("test-customer succeeded")
+  #     ID3.prune(data)
+  # except Exception:
+  #   print 'ID3 test 4 failed runtime error'
+  data = [dict(L='s', F='s', H='no', Class='no'),
           dict(L='s', F='l', H='yes', Class='yes'),
           dict(L='l', F='m', H='yes', Class='yes'),
           dict(L='m', F='m', H='yes', Class='yes'),
@@ -91,18 +111,17 @@ if __name__ == "__main__":
           dict(L='l', F='m', H='no', Class='yes'),
           dict(L='m', F='s', H='no', Class='yes'),
           dict(L='s', F='s', H='yes', Class='no')]
-# #   data = [dict(a=1, b=0, Class=2), dict(a=1, b=1, Class=1),
-# #         dict(a=2, b=0, Class=2), dict(a=2, b=1, Class=3),
-# #         dict(a=3, b=0, Class=1), dict(a=3, b=1, Class=3)]
-#   a = CHOOSE_ATTRIBUTE(data)
-#   b = ID3.split(data,'a',1)
-#   print b
-#   print data
-#   data = [dict(Class = 2),dict(Class = 2),dict(Class = 2),dict(Class = 1),dict(Class = 3),dict(Class = 4),dict(Class = 0)]
-#   majority(data)
+  valid = [dict(L='m', F='s', H='no', Class='no'),
+           dict(L='s', F='s', H='no', Class='no'),
+           dict(L='m', F='s', H='yes', Class='no')]
   try:
-    tree = ID3.ID3(data, 0)
-    if tree != None:
-      ans = ID3.evaluate(tree, dict(L='s', F='s', H='no'))
+      tree = ID3.ID3(data, 0)
+      if tree != None:
+          print ID3.test(tree,valid)
+          ID3.prune(tree,valid)
+          print ID3.test(tree,valid)
   except Exception:
-    print 'ID3 test 4 failed runtime error'
+      print 'ID3 test 4 failed runtime error'
+
+
+

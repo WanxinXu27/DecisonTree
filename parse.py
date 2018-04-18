@@ -19,6 +19,3 @@ def parse(filename):
 
   return out
 
-if __name__ == "__main__":
-  out = parse("house_votes_84.data")
-  os.system("pause")

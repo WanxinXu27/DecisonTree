@@ -9,9 +9,10 @@ def ID3(examples, default):
   Any missing attributes are denoted with a value of "?"
   '''
   if len(examples) == 0:
-    return None
+    return default
   AllClass = [element['Class'] for element in examples]
   dict = {}
+  # if all the examples are in the same class, return the class label
   for i in AllClass:
     if i not in dict:
       dict[i] = 1
@@ -22,16 +23,27 @@ def ID3(examples, default):
     root = Node()
     root.label = None
     root.children['Class'] = k
+    root.maj = k
     return root
+  # if all the features have been used up, return the majority vote
   if len(examples[0]) == 1:
     root = Node()
     root.label = None
     root.children['Class'] = majority(examples)
+    root.maj = majority(examples)
+    return root
+  # if the values of all the features are the same, do the majority vote
+  if is_trivial(examples):
+    root = Node()
+    root.label = None
+    root.children['Class'] = majority(examples)
+    root.maj = majority(examples)
     return root
   best = CHOOSE_ATTRIBUTE(examples)
   value = count([element[best] for element in examples])
   root = Node()
   root.label = best
+  root.maj = majority(examples)
   for v in value:
     examples_v = split(examples,best,v)
     root.children[v] = ID3(examples_v,0)
@@ -45,12 +57,26 @@ def prune(node, examples):
   Takes in a trained tree and a validation set of examples.  Prunes nodes in order
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
+  accuracy_before_prune = test(node,examples)
+  [node_prune,acc] = find_the_best_node_to_prune(node,node,examples)
+  if acc > accuracy_before_prune:
+    node_prune.label = None
+    node_prune.children = {}
+    node_prune.children['Class'] = node_prune.maj
+    prune(node,examples)
+
 
 def test(node, examples):
   '''
   Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
   of examples the tree classifies correctly).
   '''
+  n = len(examples)
+  y = 0
+  for ele in examples:
+    if ele['Class'] == evaluate(node,ele):
+      y += 1
+  return float(y) / float(n)
 
 
 def evaluate(node, example):
@@ -60,6 +86,8 @@ def evaluate(node, example):
   '''
   if node.label == None:
     return node.children['Class']
+  if example[node.label] not in node.children:
+    return node.maj
   classification = evaluate(node.children[example[node.label]],example)
   return classification
 
@@ -150,3 +178,41 @@ def majority(examples):
       count = dict[keys]
       maj = keys
   return maj
+
+def is_trivial(examples):
+  v = examples[0].keys()
+  for var in v:
+    if var == 'Class':
+      continue
+    dict = {}
+    for example in examples:
+      if example[var] not in dict:
+        dict[example[var]] = 1
+      else:
+        dict[example[var]] += 1
+    if len(dict) != 1:
+      return False
+  return True
+
+def find_the_best_node_to_prune(root,tree,examples):
+  if root.label == None:
+    return [root,test(tree,examples)]
+  best_node = root
+  best_accuracy = accuracy_after_prune(root,tree,examples)
+  for key in root.children:
+    [child, acc] = find_the_best_node_to_prune(root.children[key],tree,examples)
+    if acc > best_accuracy:
+      best_accuracy = acc
+      best_node = child
+  return [best_node,best_accuracy]
+
+def accuracy_after_prune(node,root,examples):
+  temp_label = node.label
+  temp_children = node.children
+  node.label = None
+  node.children = {}
+  node.children['Class'] = node.maj
+  accuracy = test(root,examples)
+  node.label = temp_label
+  node.children = temp_children
+  return accuracy
